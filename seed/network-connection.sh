@@ -121,8 +121,11 @@ node_network="${node_network:-}"
 CIDR2Netmask() {
     local cidr="$1"
 
-    local ip=$(echo $cidr | cut -f1 -d/)
-    local numon=$(echo $cidr | cut -f2 -d/)
+    # assuming if comma separated cidrs are passed, the first one is assumed to be always IPv4 and the second IPv6
+    local ipv4_cidr=$(echo $cidr | cut -f1 -d,)
+    # using IPv4 cidr
+    local ip=$(echo $ipv4_cidr | cut -f1 -d/)
+    local numon=$(echo $ipv4_cidr | cut -f2 -d/)
 
     local numoff=$(( 32 - $numon ))
     while [ "$numon" -ne "0" ]; do
@@ -162,6 +165,9 @@ if [[ ! -z "$node_network" ]]; then
       node_network_address=$(echo $n | cut -f1 -d/)
       node_network_netmask=$(CIDR2Netmask $n)
       echo "pull-filter accept \"route ${node_network_address} ${node_network_netmask}\"" >> openvpn.config
+      log "push \"route ${node_network_address} ${node_network_netmask}\""
+      # TODO: anaylze the endless loop here when providing ipv4 and ipv6 adresses
+      break
   done
 fi
 

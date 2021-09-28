@@ -13,7 +13,8 @@
 # limitations under the License.
 
 VERSION                := $(shell cat VERSION)
-REGISTRY               := eu.gcr.io/gardener-project/gardener
+#REGISTRY               := eu.gcr.io/gardener-project/gardener
+REGISTRY               := schnooglecorp
 PREFIX                 := vpn
 SEED_IMAGE_REPOSITORY  := $(REGISTRY)/$(PREFIX)-seed
 SEED_IMAGE_TAG         := $(VERSION)
